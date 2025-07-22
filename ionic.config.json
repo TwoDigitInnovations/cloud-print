@@ -1,0 +1,7 @@
+{
+  "name": "cloudprint",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
