@@ -27,7 +27,7 @@ function App() {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <button onClick={() => {
         console.log('printcommand', 'hello')
-        socket.emit('printcommand', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA2oASENe7GdCli1KnAl6cnDnuD6lGT60txQ&s');
+        socket.emit('printcommand', 'https://m.media-amazon.com/images/I/71+17bVYHxL._UF1000,1000_QL80_.jpg');
       }}>Print</button>
     </div>
   );
