@@ -65,37 +65,7 @@ function createWindow() {
         });
         const url = 'https://res.cloudinary.com/dweddwpll/image/upload/v1753082255/properties/brex6cfdjbvnwszq6uzr.png'
 
-        const { base64, contentType } = await downloadImageAsBase64WithSize(url);
-        const format = contentType.split('/')[1].toUpperCase(); // JPEG, PNG, etc.
 
-        const documentDefinition = {
-            content: [
-                {
-                    image: 'data:image/png;base64,' + base64,
-                    width: 510 // Adjust as needed
-                }
-            ]
-        };
-
-
-
-
-        pdfMake.createPdf(documentDefinition).getBuffer(async (result) => {
-            // console.log(result.charAt(0))
-            const tempPath = path.join(os.tmpdir(), new Date().getTime() + '.pdf');
-            fs.writeFileSync(tempPath, result);
-            const fileUrl = 'file://' + tempPath;
-            console.log('PDF File URL:', fileUrl);
-            try {
-                await printer.print(fileUrl, {
-                    printer: 'EPSON CW-C4000 Series',
-                    unix: ['-o media=Custom.85x54mm', '-o fit-to-page'], // macOS/Linux print options
-                    win32: ['-print-settings "fit"'], // Windows-specific options
-                });
-            } catch (err) {
-                console.log(err)
-            }
-        })
         // pdfMake.createPdf(documentDefinition).getBlob(async (blob) => {
         //     // const url = URL.createObjectURL(blob);
         //     // console.log("PDF URL:", url);
@@ -130,6 +100,38 @@ function createWindow() {
             socket.on("print", async (imageUrl) => {
                 console.log("Connected to socket server:", socket.id);
                 console.log(imageUrl)
+
+                const { base64, contentType } = await downloadImageAsBase64WithSize(imageUrl);
+                const format = contentType.split('/')[1].toUpperCase(); // JPEG, PNG, etc.
+
+                const documentDefinition = {
+                    content: [
+                        {
+                            image: 'data:image/png;base64,' + base64,
+                            width: 510 // Adjust as needed
+                        }
+                    ]
+                };
+
+
+
+
+                pdfMake.createPdf(documentDefinition).getBuffer(async (result) => {
+                    const name = new Date().getTime() + '.pdf'
+                    const tempPath = path.join(os.tmpdir(), name);
+                    fs.writeFileSync(name, result);
+                    const fileUrl = 'file://' + tempPath;
+                    console.log('PDF File URL:', fileUrl);
+                    try {
+                        await printer.print(name, {
+                            printer: 'EPSON CW-C4000 Series',
+                            unix: ['-o media=Custom.85x54mm', '-o fit-to-page'], // macOS/Linux print options
+                            win32: ['-print-settings "fit"'], // Windows-specific options
+                        });
+                    } catch (err) {
+                        console.log(err)
+                    }
+                })
 
                 // normal printer
 
