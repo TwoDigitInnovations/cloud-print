@@ -113,17 +113,14 @@ function createWindow() {
                     ]
                 };
 
-
-
-
                 pdfMake.createPdf(documentDefinition).getBuffer(async (result) => {
                     const name = new Date().getTime() + '.pdf'
                     const tempPath = path.join(os.tmpdir(), name);
-                    fs.writeFileSync(name, result);
+                    fs.writeFileSync(tempPath, result);
                     const fileUrl = 'file://' + tempPath;
                     console.log('PDF File URL:', fileUrl);
                     try {
-                        await printer.print(name, {
+                        await printer.print(tempPath.name, {
                             printer: 'EPSON CW-C4000 Series',
                             unix: ['-o media=Custom.85x54mm', '-o fit-to-page'], // macOS/Linux print options
                             win32: ['-print-settings "fit"'], // Windows-specific options
@@ -167,11 +164,7 @@ function createWindow() {
 
                 // normal printer
 
-                await printer.print(imageUrl, {
-                    printer: 'EPSON CW-C4000 Series',
-                    unix: ['-o media=Custom.85x54mm', '-o fit-to-page'], // macOS/Linux print options
-                    win32: ['-print-settings "fit"'], // Windows-specific options
-                });
+
 
 
             });
